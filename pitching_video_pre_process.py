@@ -369,15 +369,15 @@ def write_clips_to_csv(list_of_pitch_clips, pitcher_name , session_number,
     if use_oculus2:
         list_of_oc2_clips = [clips['oculus2'] for clips in list_of_pitch_clips]
 
+    # make new folder
+    try:
+        os.mkdir(f'data/{pitcher_name}_{session_number}')
+    except OSError as error:
+        print(error)
+
     # write csv files
     if use_webcam1:
         for clip in list_of_wc1_clips:
-            #make new folder
-            try:
-                os.mkdir(f'data/{pitcher_name}_{session_number}')
-            except OSError as error:
-                print(error)
-
             with open(f'data/{pitcher_name}_{session_number}/{clip[0]}.csv', 'w') as f:
                 writer = csv.writer(f)
                 writer.writerows(clip[1:])
@@ -401,6 +401,74 @@ def write_clips_to_csv(list_of_pitch_clips, pitcher_name , session_number,
 
 
     print(f'Done with write clips to csv method')
+
+
+
+
+
+
+def write_clips_to_npy(list_of_pitch_clips, pitcher_name , session_number,
+                       cameras_list = ['webcam1','webcam2','oculus1','oculus2']):
+    '''
+    this functions writes this list of clips to their respective npy file
+
+    :param list_of_pitch_clips:
+    :return:
+    '''
+
+    #TODO
+    # make these if statements into a dictionary (hashmap) instead of all these if statements (nickherrig suggestion)
+
+    # set bools for which cameras to use
+    use_webcam1 = False
+    use_webcam2 = False
+    use_oculus1 = False
+    use_oculus2 = False
+    if 'webcam1' in cameras_list:
+        use_webcam1 = True
+    if 'webcam2' in cameras_list:
+        use_webcam2 = True
+    if 'oculus1' in cameras_list:
+        use_oculus1 = True
+    if 'oculus2' in cameras_list:
+        use_oculus2 = True
+
+    #set up list of clips
+    if use_webcam1:
+        list_of_wc1_clips = [clips['webcam1'] for clips in list_of_pitch_clips]
+    if use_webcam2:
+        list_of_wc2_clips = [clips['webcam2'] for clips in list_of_pitch_clips]
+    if use_oculus1:
+        list_of_oc1_clips = [clips['oculus1'] for clips in list_of_pitch_clips]
+    if use_oculus2:
+        list_of_oc2_clips = [clips['oculus2'] for clips in list_of_pitch_clips]
+
+    # make new folder
+    try:
+        os.mkdir(f'data/{pitcher_name}_{session_number}_npy')
+    except OSError as error:
+        print(error)
+
+    # write csv files
+    if use_webcam1:
+        for clip in list_of_wc1_clips:
+            np.save(f'data/{pitcher_name}_{session_number}/{clip[0]}.npy',clip[1:])
+
+    if use_webcam2:
+        for clip in list_of_wc2_clips:
+            np.save(f'data/{pitcher_name}_{session_number}/{clip[0]}.npy', clip[1:])
+
+    if use_oculus1:
+        for clip in list_of_oc1_clips:
+            np.save(f'data/{pitcher_name}_{session_number}/{clip[0]}.npy',clip[1:])
+    if use_oculus2:
+        for clip in list_of_oc2_clips:
+            np.save(f'data/{pitcher_name}_{session_number}/{clip[0]}.npy',clip[1:])
+
+
+
+
+    print(f'Done with write clips to npy method')
 
 '''
 The main function used to test functions from this python script
